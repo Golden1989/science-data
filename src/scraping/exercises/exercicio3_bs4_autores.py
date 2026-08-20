@@ -70,10 +70,21 @@ _author_cache: dict[str, str] = {}
 def get_author_born_date(author_url: str) -> str:
     """Recebe a URL absoluta da pagina de um autor e retorna a data de
     nascimento. Usa _author_cache pra nao buscar a mesma pagina duas vezes.
-
-    TODO: implementar.
     """
-    raise NotImplementedError
+    if author_url in _author_cache:
+        return _author_cache[author_url]
+
+    response = requests.get(author_url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+    born_date = soup.select_one("span.author-born-date").text.strip()
+
+    _author_cache[author_url] = born_date
+    return born_date
+    
+    
+
+  
 
 
 def parse_quote(quote_div, base_url: str = BASE_URL) -> dict:
@@ -82,7 +93,19 @@ def parse_quote(quote_div, base_url: str = BASE_URL) -> dict:
 
     TODO: implementar (vai chamar get_author_born_date por dentro).
     """
-    raise NotImplementedError
+    quote_text = quote_div.select_one(".text").get_text(strip=True)
+    author = quote_div.select_one(".author").get_text(strip=True)
+    tags = [tag.get_text(strip=True) for tag in quote_div.select(".tag")]
+    author_relative_url = quote_div.select_one("a[href^='/author/']")["href"]
+    author_url = requests.compat.urljoin(base_url, author_relative_url)
+    author_born = get_author_born_date(author_url)
+
+    return {
+        "quote_text": quote_text,
+        "author": author,
+        "tags": tags,
+        "author_born": author_born,
+    }
 
 
 def get_next_page_url(soup: BeautifulSoup, current_url: str) -> str | None:
@@ -90,7 +113,14 @@ def get_next_page_url(soup: BeautifulSoup, current_url: str) -> str | None:
 
     TODO: implementar (igual ao exercicio 1).
     """
-    raise NotImplementedError
+    next_link = soup.select_one("li.next a")
+    if next_link is None:
+        return None  # ultima pagina do catalogo, nao tem mais "next"
+
+    href = next_link["href"]  # algo tipo "/page/2/" (relativo)
+    # urljoin junta a URL atual com o href relativo pra formar uma URL absoluta,
+    next_page_url = requests.compat.urljoin(current_url, href)
+    return next_page_url
 
 
 def scrape_quotes(start_url: str = START_URL, num_pages: int = NUM_PAGES) -> list[dict]:
@@ -99,7 +129,22 @@ def scrape_quotes(start_url: str = START_URL, num_pages: int = NUM_PAGES) -> lis
 
     TODO: implementar o loop de paginacao (igual ao exercicio 1).
     """
-    raise NotImplementedError
+    quotes = []
+    url = start_url
+
+    for _ in range(num_pages):
+        response = requests.get(url, timeout=10)
+        response.encoding = response.apparent_encoding  # corrige o encoding bugado do site
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        for quote_div in soup.select(".quote"):
+            quotes.append(parse_quote(quote_div))
+
+        url = get_next_page_url(soup, url)
+        if url is None:
+            break  # nao tem mais paginas
+
+    return quotes
 
 
 if __name__ == "__main__":
