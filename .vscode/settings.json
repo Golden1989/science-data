@@ -1,9 +1,3 @@
 {
-    "python.defaultInterpreterPath": "C:\\Users\\icbue\\miniconda3\\envs\\science_data\\python.exe",
-    "jupyter.kernels.filter": [
-        {
-            "path": "C:\\Users\\icbue\\miniconda3\\envs\\science_data\\python.exe",
-            "type": "pythonEnvironment"
-        }
-    ]
+    "python.defaultInterpreterPath": "C:\\Users\\icbue\\miniconda3\\envs\\science_data\\python.exe"
 }
