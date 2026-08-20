@@ -59,29 +59,66 @@ RATING_MAP = {
 def parse_book(article) -> dict:
     """Recebe uma tag <article class="product_pod"> e retorna um dict com
     title, price, rating e availability.
-
-    TODO: implementar.
     """
-    raise NotImplementedError
+    # article.h3 acha o <h3> dentro do article; .a acha o <a> dentro do h3;
+    # ["title"] pega o atributo title="..." desse <a> (titulo completo, sem cortar)
+    title = article.h3.a["title"]
+
+    # select_one busca por CSS selector (".price_color" = class="price_color")
+    # get_text(strip=True) pega so o texto visivel, sem espacos nas pontas
+    price_text = article.select_one(".price_color").get_text(strip=True)
+    # remove o simbolo de moeda (e o "Â" fantasma do encoding errado) e converte pra float
+    price = float(price_text.replace("Â", "").replace("£", ""))
+
+    # <p class="star-rating Three"> -> a tag tem DUAS classes: "star-rating" e "Three"
+    # ["class"] em uma tag do bs4 sempre retorna uma LISTA de classes
+    rating_classes = article.select_one(".star-rating")["class"]
+    rating_word = rating_classes[1]  # "star-rating" -> [0], "Three" -> [1]
+    rating = RATING_MAP[rating_word]
+
+    availability = article.select_one(".availability").get_text(strip=True)
+
+    return {
+        "title": title,
+        "price": price,
+        "rating": rating,
+        "availability": availability,
+    }
 
 
 def get_next_page_url(soup: BeautifulSoup, current_url: str) -> str | None:
-    """Retorna a URL absoluta da proxima pagina, ou None se nao houver.
+    """Retorna a URL absoluta da proxima pagina, ou None se nao houver."""
+    next_link = soup.select_one("li.next a")
+    if next_link is None:
+        return None  # ultima pagina do catalogo, nao tem mais "next"
 
-    TODO: implementar (procurar <li class="next"><a href="...">, usar
-    requests.compat.urljoin(current_url, href) para resolver o caminho relativo).
-    """
-    raise NotImplementedError
+    href = next_link["href"]  # algo tipo "catalogue/page-2.html" (relativo)
+    # urljoin junta a URL atual com o href relativo pra formar uma URL absoluta,
+    # sem voce ter que montar a string na mao
+    return requests.compat.urljoin(current_url, href)
 
 
 def scrape_books(start_url: str = START_URL, num_pages: int = NUM_PAGES) -> list[dict]:
     """Percorre `num_pages` paginas a partir de start_url e retorna a lista
     de dicts de todos os livros encontrados.
-
-    TODO: implementar o loop de paginacao usando parse_book() e
-    get_next_page_url().
     """
-    raise NotImplementedError
+    books = []
+    url = start_url
+
+    for _ in range(num_pages):
+        response = requests.get(url, timeout=10)
+        response.encoding = response.apparent_encoding  # corrige o encoding bugado do site
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        for article in soup.select(".product_pod"):
+            books.append(parse_book(article))
+
+        next_url = get_next_page_url(soup, url)
+        if next_url is None:
+            break  # acabou o catalogo antes de completar num_pages
+        url = next_url
+
+    return books
 
 
 if __name__ == "__main__":
