@@ -1,0 +1,15 @@
+name: science_data
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - beautifulsoup4
+      - selenium
+      - requests
+      - lxml
+      - html5lib
+      - pandas
+      - ipykernel
+      - webdriver-manager
