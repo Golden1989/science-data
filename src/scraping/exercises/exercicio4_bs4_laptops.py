@@ -59,7 +59,20 @@ def parse_item(card) -> dict:
 
     TODO: implementar.
     """
-    raise NotImplementedError
+    name = card.select_one(".title")["title"]
+    price = float(card.select_one("[itemprop = 'price']").get_text(strip = True).replace("$", ""))
+    rating = int(card.select_one("p[data-rating]")["data-rating"])
+    reviews = int(card.select_one("[itemprop = 'reviewCount']").get_text(strip = True))
+    
+    return{
+       "name": name,
+       "price": price,
+       "rating": rating,
+       "reviews": reviews
+    }
+    
+    
+
 
 
 def get_next_page_url(soup: BeautifulSoup, current_url: str) -> str | None:
@@ -68,8 +81,13 @@ def get_next_page_url(soup: BeautifulSoup, current_url: str) -> str | None:
     TODO: implementar (igual ao exercicio 1: procurar o link, usar
     requests.compat.urljoin caso o href seja relativo).
     """
-    raise NotImplementedError
-
+    next_link = soup.select_one("a.next")
+    if next_link is None:
+      return None
+    href = next_link["href"]
+    return requests.compat. urljoin(current_url, href)
+    
+   
 
 def scrape_laptops(start_url: str = START_URL, num_pages: int = NUM_PAGES) -> list[dict]:
     """Percorre `num_pages` paginas a partir de start_url e retorna a lista
@@ -77,9 +95,22 @@ def scrape_laptops(start_url: str = START_URL, num_pages: int = NUM_PAGES) -> li
 
     TODO: implementar o loop de paginacao (igual ao exercicio 1).
     """
-    raise NotImplementedError
-
-
+    laptops = []
+    url = start_url
+    
+    for _ in range (num_pages):
+      response = requests.get(url, timeout = 10)
+      response.encoding = response.apparent_encoding
+      soup = BeautifulSoup( response.text, "html.parser")
+      
+      for card in soup.select(".thumbnail"):
+        laptops.append(parse_item(card))
+      next_url = get_next_page_url(soup, url)
+      if next_url is None:
+        break
+      url = next_url 
+    return laptops
+      
 if __name__ == "__main__":
     laptops = scrape_laptops()
     df = pd.DataFrame(laptops)
@@ -88,3 +119,5 @@ if __name__ == "__main__":
 
     print(f"Produtos coletados: {len(df)}")
     print(f"Preco medio: ${df['price'].mean():.2f}")
+
+

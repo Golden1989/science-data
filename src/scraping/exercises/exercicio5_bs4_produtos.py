@@ -54,6 +54,16 @@ def parse_item(card) -> dict:
 
     TODO: implementar.
     """
+    name = card.select_one("h2").get_text(strip = True)
+    price = float(card.select_one(".price").get_text(strip = True).replace("$", ""))
+    product_url = card.select_one("a")["href"]
+    
+    return{
+      "name": name, 
+      "price": price,
+      "product_url": product_url
+    }
+    
     raise NotImplementedError
 
 
@@ -62,6 +72,11 @@ def get_next_page_url(soup: BeautifulSoup) -> str | None:
 
     TODO: implementar (aqui NAO precisa de urljoin, o href ja vem completo).
     """
+    next_link = soup.select_one("a.next")
+    if next_link is None:
+      return None
+    href = next_link["href"]
+    return href
     raise NotImplementedError
 
 
@@ -71,9 +86,22 @@ def scrape_products(start_url: str = START_URL, num_pages: int = NUM_PAGES) -> l
 
     TODO: implementar o loop de paginacao (igual aos exercicios anteriores).
     """
-    raise NotImplementedError
-
-
+    products = []
+    url = start_url
+    for _ in range(num_pages):
+      response = requests.get(url, timeout = 10)
+      response.encoding = response.apparent_encoding
+      soup = BeautifulSoup(response.text, "html.parser")
+      for card in soup.select(".product"):
+        products.append(parse_item(card))
+      next_url = get_next_page_url(soup)
+      if next_url is None:
+        break
+      url = next_url
+    return products
+    
+         
+      
 if __name__ == "__main__":
     products = scrape_products()
     df = pd.DataFrame(products)
