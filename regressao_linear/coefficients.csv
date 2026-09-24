@@ -1,0 +1,13 @@
+feature,coef
+Floors,13103.622737832558
+Bathrooms,-5262.6959137548965
+Bedrooms,0.0
+Area,-0.0
+HouseAge,-0.0
+BathBedRatio,-0.0
+AreaPerRoom,-0.0
+Condition,-0.0
+Location_Rural,0.0
+Location_Suburban,0.0
+Location_Urban,-0.0
+Garage_Yes,0.0
