@@ -83,9 +83,19 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.drop_duplicates()
 
-    # Padroniza texto das categóricas (espaços / capitalização)
-    for col in ORDINAL_FEATURES + NOMINAL_FEATURES:
-        df[col] = df[col].astype(str).str.strip().str.title()
+    # Sem o preço não há o que aprender: essas linhas saem em vez de serem imputadas
+    df = df.dropna(subset=[TARGET])
+
+    # Padroniza texto das categóricas (espaços / capitalização), preservando nulos
+    cat_cols = ORDINAL_FEATURES + NOMINAL_FEATURES
+    for col in cat_cols:
+        df[col] = df[col].str.strip().str.title()
+
+    # Imputação ANTES das regras: um nulo falharia nas comparações abaixo e a
+    # linha seria descartada em vez de preenchida
+    num_cols = df.select_dtypes("number").columns.drop(TARGET)
+    df[num_cols] = df[num_cols].fillna(df[num_cols].median())
+    df[cat_cols] = df[cat_cols].fillna(df[cat_cols].mode().iloc[0])
 
     # Regras de consistência de domínio
     valid = (
@@ -98,12 +108,6 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
         & (df["Condition"].isin(CONDITION_ORDER[0]))
     )
     df = df[valid]
-
-    # Imputação (o dataset atual não tem nulos, mas o script fica robusto)
-    num_cols = df.select_dtypes("number").columns
-    df[num_cols] = df[num_cols].fillna(df[num_cols].median())
-    cat_cols = ORDINAL_FEATURES + NOMINAL_FEATURES
-    df[cat_cols] = df[cat_cols].fillna(df[cat_cols].mode().iloc[0])
 
     print(f"\nLimpeza: {n0} -> {len(df)} linhas ({n0 - len(df)} removidas)")
     return df.reset_index(drop=True)
