@@ -1,0 +1,78 @@
+﻿feature,coef
+area,943.2113293248153
+property tax,750.5607464610638
+hoa,749.787318875244
+hoa^2,707.876237717762
+property tax^2,597.205242603827
+area city_1,594.3735684148978
+city_1^2,561.2401689633102
+city_1,561.2401689633078
+furniture_not furnished^2,-423.5363531091877
+furniture_not furnished,-423.53635310906617
+bathroom,397.6744323858579
+parking spaces,386.63759616916366
+area animal_not acept,346.36771044603165
+rooms floor_missing,333.9996096151137
+area rooms,323.708574404031
+area bathroom,315.2661742859345
+area parking spaces,314.55738222215996
+rooms city_1,-276.1484618921323
+property tax city_1,224.18596602331894
+animal_not acept furniture_not furnished,-220.9436674457504
+floor_missing furniture_not furnished,206.06399073854178
+hoa city_1,199.68343432084376
+area furniture_not furnished,-194.3757539820354
+rooms bathroom,-187.124419566593
+property tax rooms,-172.0853952562339
+area hoa,161.91279840987949
+parking spaces animal_not acept,-158.5037826506324
+property tax animal_not acept,-142.82041369486356
+city_1 animal_not acept,132.04507354317968
+property tax bathroom,-130.48610407969912
+area^2,-129.6358964728329
+rooms,-127.73652992109052
+city_1 furniture_not furnished,-119.5361163936131
+bathroom furniture_not furnished,117.9161460117685
+floor furniture_not furnished,116.29378262712271
+floor_missing^2,-110.28122349474756
+area floor_missing,-108.14633532276224
+hoa property tax,-101.18252443596724
+floor_missing,-97.84563935894549
+property tax furniture_not furnished,-95.77571130422426
+bathroom floor,89.65542286070915
+property tax parking spaces,-86.82615712464315
+bathroom parking spaces,-85.91902713344543
+property tax floor,84.81757223496828
+parking spaces floor_missing,-82.15728474014426
+hoa furniture_not furnished,81.37645617069467
+area property tax,80.1838190552081
+parking spaces^2,-79.60466549483426
+animal_not acept^2,77.04719931896987
+animal_not acept,77.04719931896979
+parking spaces floor,-76.89620076637983
+area floor,-75.49367810842142
+floor_missing animal_not acept,-74.87196445137671
+hoa floor_missing,73.63383099961415
+floor city_1,63.3520040996123
+floor_missing city_1,53.34762778345255
+property tax floor_missing,48.6749192031501
+bathroom floor_missing,46.29187364013285
+rooms furniture_not furnished,42.400544605034526
+rooms animal_not acept,-41.62977149504072
+bathroom city_1,40.499065813047224
+parking spaces furniture_not furnished,-35.62275526913179
+rooms floor,-35.32700456318577
+rooms parking spaces,-24.745034527119003
+bathroom animal_not acept,22.718542003881844
+hoa floor,-22.614256917915032
+bathroom^2,-20.24670401473787
+hoa rooms,-17.98828553162283
+floor,17.589986589289932
+floor floor_missing,12.880245773615913
+hoa parking spaces,-12.634871587518711
+hoa bathroom,-12.283123574454828
+hoa animal_not acept,9.46820902109557
+parking spaces city_1,-6.963861211122996
+floor^2,4.254171731097443
+floor animal_not acept,2.7708347833311326
+rooms^2,1.530428634906841
