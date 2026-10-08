@@ -1,0 +1,7 @@
+node_modules/
+.venv/
+__pycache__/
+
+# Dados coletados: não publicar (LGPD e termos de uso do site; ver README)
+dados/brutos/
+dados/processados/

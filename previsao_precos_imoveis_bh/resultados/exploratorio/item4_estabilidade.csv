@@ -1,0 +1,9 @@
+﻿alvo,bairro,coef_localizacao,trocam_sinal,quais_trocam,cv_log_area,cv_quartos,cv_banheiros,cv_vagas,cv_log_area_x_casa,cv_area_m2
+log-log,"(a) bairro, limiar 5",4,1,Buritis,0.126,0.953,0.196,0.185,0.186,
+log-log,"(b) bairro, limiar 3",21,4,"Buritis, Dona Clara, Estoril, Nova Suíssa",0.151,7.946,0.204,0.186,0.162,
+log-log,(c) regional administrativa,8,2,"Barreiro, Nordeste",0.112,1.788,0.146,0.178,0.096,
+log-log,(d) target encoding,1,0,,0.101,2.609,0.165,0.169,0.141,
+linear,"(a) bairro, limiar 5",5,2,"m2_x_casa, Santa Efigênia",,0.372,0.198,0.153,,0.359
+linear,"(b) bairro, limiar 3",22,3,"m2_x_casa, Dona Clara, Graça",,1.033,0.204,0.155,,0.492
+linear,(c) regional administrativa,9,4,"Barreiro, Nordeste, Noroeste, Pampulha",,0.546,0.166,0.157,,0.529
+linear,(d) target encoding,2,0,,,0.697,0.186,0.157,,0.285
